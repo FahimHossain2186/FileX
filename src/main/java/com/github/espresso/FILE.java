@@ -6,13 +6,27 @@ import java.nio.file.Paths;
 
 public class FILE {
     private String filePath;
-    private String mode; // "r" for read, "w" for write
+
+    private CustomFile(String filePath) {
+        this.filePath = filePath;
+    }
+     // "r" for read, "w" for write, "a" for append
 
     // The Constructor: This runs when someone does `new FILE("path", "mode")`
     public FILE(String filePath, String mode) {
         this.filePath = filePath;
-        this.mode = mode.toLowerCase();
+
+        if (mode.equalsIgnoreCase("r")) {
+            return (ReadableFile) file; // Cast to only allow reading
+        } else if (mode.equalsIgnoreCase("w") || mode.equalsIgnoreCase("a")) {
+            return (WritableFile) file; // Cast to only allow writing
+        } else {
+            throw new IllegalArgumentException("Unknown mode: " + mode);
+        }
     }
+
+
+
 
     // A Pythonic .read() method that reads the entire file in ONE line
     public String read() throws IOException {
