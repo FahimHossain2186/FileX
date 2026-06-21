@@ -16,11 +16,11 @@ public class EzioFileTest {
     @Test
     public void testFileWriting() throws IOException {
         String path =  path("test_write.txt");
-        FILE.Write writer = new FILE.Write(path);
+        FileX.Write writer = new FileX.Write(path);
 
         writer.write("Hello Espresso");
 
-        FILE.Read reader = new FILE.Read(path);
+        FileX.Read reader = new FileX.Read(path);
         List<String> lines = reader.readAllLines();
 
         assertEquals("Hello Espresso", lines.get(0));
@@ -30,12 +30,12 @@ public class EzioFileTest {
     @Test
     public void testFileOverwrite() throws IOException {
         String path =  path("test_overwrite.txt");
-        FILE.Write writer = new FILE.Write(path);
+        FileX.Write writer = new FileX.Write(path);
 
         writer.write("Old Data");
         writer.write("New Data"); // This should wipe "Old Data" clean
 
-        FILE.Read reader = new FILE.Read(path);
+        FileX.Read reader = new FileX.Read(path);
         List<String> lines = reader.readAllLines();
 
         assertEquals(1, lines.size());
@@ -48,14 +48,14 @@ public class EzioFileTest {
         String path =  path("test_append.txt");
 
         // Start with an initial line
-        FILE.Write writer = new FILE.Write(path);
+        FileX.Write writer = new FileX.Write(path);
         writer.write("Line 1");
 
         // Append a second line
-        FILE.Append appender = new FILE.Append(path);
+        FileX.Append appender = new FileX.Append(path);
         appender.append("Line 2");
 
-        FILE.Read reader = new FILE.Read(path);
+        FileX.Read reader = new FileX.Read(path);
         List<String> lines = reader.readAllLines();
 
         assertEquals(2, lines.size());
@@ -67,11 +67,11 @@ public class EzioFileTest {
     @Test
     public void testEmptyFile() throws IOException {
         String path =  path("test_empty.txt");
-        FILE.Write writer = new FILE.Write(path);
+        FileX.Write writer = new FileX.Write(path);
 
         writer.write(""); // Writes just a newline separator
 
-        FILE.Read reader = new FILE.Read(path);
+        FileX.Read reader = new FileX.Read(path);
         List<String> lines = reader.readAllLines();
 
         // The list should contain exactly 1 element, which is an empty string ""
