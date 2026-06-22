@@ -121,4 +121,80 @@ public class FileXReadTest {
         assertEquals(1, reader.nextLineNumber());
         assertEquals("A", reader.readLine());
     }
+
+    // Test Case 8: lineCount() should report how many lines the file has, without moving the cursor
+    @Test
+    void testLineCountReportsTotalLines() throws IOException {
+        String path = path("stats_line_count.txt");
+        FileX.write(path).write(List.of("A", "B", "C"));
+
+        FileX.Read reader = FileX.read(path);
+
+        assertEquals(3, reader.lineCount());
+        assertEquals(1, reader.nextLineNumber()); // cursor untouched
+    }
+
+    // Test Case 9: isEmpty() should be true for a file with no lines and false otherwise
+    @Test
+    void testIsEmptyReflectsLineCount() throws IOException {
+        String emptyPath = path("stats_empty.txt");
+        FileX.write(emptyPath).write(List.<String>of());
+
+        String nonEmptyPath = path("stats_non_empty.txt");
+        FileX.write(nonEmptyPath).write("Something");
+
+        assertTrue(FileX.read(emptyPath).isEmpty());
+        assertFalse(FileX.read(nonEmptyPath).isEmpty());
+    }
+
+    // Test Case 10: firstLine() and lastLine() should return the expected ends of the file
+    @Test
+    void testFirstAndLastLine() throws IOException {
+        String path = path("stats_first_last.txt");
+        FileX.write(path).write(List.of("Intro", "Body", "Conclusion"));
+
+        FileX.Read reader = FileX.read(path);
+
+        assertEquals("Intro", reader.firstLine());
+        assertEquals("Conclusion", reader.lastLine());
+    }
+
+    // Test Case 11: lastLine() should return null, and firstLine() should throw, when the file is empty
+    @Test
+    void testFirstAndLastLineOnEmptyFile() throws IOException {
+        String path = path("stats_first_last_empty.txt");
+        FileX.write(path).write(List.<String>of());
+
+        FileX.Read reader = FileX.read(path);
+
+        assertThrows(IndexOutOfBoundsException.class, reader::firstLine);
+        assertNull(reader.lastLine());
+    }
+
+    // Test Case 12: contains() should find text in any line, and reject a null search term
+    @Test
+    void testContainsFindsTextAcrossLines() throws IOException {
+        String path = path("stats_contains.txt");
+        FileX.write(path).write(List.of("Math", "Physics", "Chemistry"));
+
+        FileX.Read reader = FileX.read(path);
+
+        assertTrue(reader.contains("Physics"));
+        assertFalse(reader.contains("Biology"));
+        assertThrows(IllegalArgumentException.class, () -> reader.contains(null));
+    }
+
+    // Test Case 13: refresh() should return the same reader instance, so calls can be chained
+    @Test
+    void testRefreshIsChainable() throws IOException {
+        String path = path("stats_refresh_chain.txt");
+        FileX.write(path).write("Original");
+
+        FileX.Read reader = FileX.read(path);
+        reader.readAllLines(); // primes the cache
+
+        FileX.write(path).write("Updated");
+
+        assertEquals("Updated", reader.refresh().readAllLines().get(0));
+    }
 }

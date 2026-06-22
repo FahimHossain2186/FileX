@@ -5,10 +5,31 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.espresso</groupId>
-  <artifactId>ezio</artifactId>
+  <artifactId>filex</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0</version> <name>EZIO</name>
-  <description>A simple, fluent Java NIO wrapper for human-friendly file operations.</description>
+  <version>1.0.0</version> <name>FileX</name>
+  <description>
+    Ultra-simple, beginner-friendly file handling for Java.
+  </description>
+  <url>https://github.com/FahimHossain2186/FileX</url>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Md. Fahim Hossain</name>
+      <url>https://github.com/FahimHossain2186</url>
+    </developer>
+    <developer>
+      <name>Fariba Ahmed</name>
+      <url>https://github.com/FahimHossain2186</url>
+    </developer>
+  </developers>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>

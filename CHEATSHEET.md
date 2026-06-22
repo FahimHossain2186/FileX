@@ -32,7 +32,12 @@ swap `FileX.read("path")` for `new FileX.Read("path")`, and so on.
 | `hasNextLine()` | `boolean` | True if `readLine()` has something left to give. |
 | `nextLineNumber()` | `int` | The line number the next `readLine()` call will return. |
 | `resetReader()` | `void` | Moves the cursor back to line 1. |
-| `refresh()` | `void` | Clears the cached lines, forces next read from disk. |
+| `refresh()` | `Read` | Clears the cached lines, forces next read from disk. Returns `this`, so it's chainable (e.g. `reader.refresh().readAllLines()`). |
+| `lineCount()` | `int` | How many lines the file currently has. Doesn't move the cursor. |
+| `isEmpty()` | `boolean` | True if the file has no lines. Doesn't move the cursor. |
+| `firstLine()` | `String` | The first line. Throws `IndexOutOfBoundsException` if the file is empty. |
+| `lastLine()` | `String` | The last line, or `null` if the file is empty. |
+| `contains(String search)` | `boolean` | True if any line contains `search`. Throws `IllegalArgumentException` if `search` is null. |
 
 ---
 
@@ -63,6 +68,8 @@ swap `FileX.read("path")` for `new FileX.Read("path")`, and so on.
 | Method | Returns | Notes |
 |---|---|---|
 | `FileX.exists(path)` | `boolean` | Checks if a file is there. |
+| `FileX.size(path)` | `long` | File size in bytes. Throws `IOException` if the file doesn't exist. |
+| `FileX.isEmpty(path)` | `boolean` | True if the file exists and has zero bytes. Throws `IOException` if the file doesn't exist. |
 | `FileX.create(path)` | `void` | Makes an empty file. Parent folder must already exist. Throws if file already exists. |
 | `FileX.createParentDirectories(path)` | `void` | Builds any missing folders in the path. |
 | `FileX.delete(path)` | `void` | Deletes the file. Throws if it wasn't there. |

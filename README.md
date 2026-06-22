@@ -228,6 +228,38 @@ reader.refresh();
 > don't keep hitting the filesystem. If the file changes on disk after
 > you've started reading, call `refresh()` to pick up the new content.
 
+### Count the lines
+
+```java
+reader.lineCount();
+```
+
+### Check if the file has any lines
+
+```java
+reader.isEmpty();
+```
+
+### Get the first line
+
+```java
+reader.firstLine();
+```
+
+### Get the last line
+
+```java
+reader.lastLine();
+```
+
+> Returns `null` if the file has no lines.
+
+### Check if a line contains some text
+
+```java
+reader.contains("Math");
+```
+
 ---
 
 ## Writing
@@ -299,6 +331,18 @@ var appender = FileX.append("notes.txt", StandardCharsets.US_ASCII);
 
 ```java
 FileX.exists("notes.txt");
+```
+
+### Check a file's size, in bytes
+
+```java
+FileX.size("notes.txt");
+```
+
+### Check if a file is empty
+
+```java
+FileX.isEmpty("notes.txt");
 ```
 
 ### Create a file
@@ -457,10 +501,10 @@ Add the JitPack repository:
 
 ```xml
 <repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
 </repositories>
 ```
 
@@ -468,9 +512,9 @@ Add the dependency:
 
 ```xml
 <dependency>
-    <groupId>com.github.FahimHossain2186</groupId>
-    <artifactId>FileX</artifactId>
-    <version>VERSION</version>
+  <groupId>com.github.FahimHossain2186</groupId>
+  <artifactId>FileX</artifactId>
+  <version>VERSION</version>
 </dependency>
 ```
 
@@ -478,11 +522,11 @@ Add the dependency:
 
 ```groovy
 repositories {
-    maven { url 'https://jitpack.io' }
+  maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'com.github.FahimHossain2186:FileX:VERSION'
+  implementation 'com.github.FahimHossain2186:FileX:VERSION'
 }
 ```
 
@@ -490,11 +534,11 @@ dependencies {
 
 ```kotlin
 repositories {
-    maven { url = uri("https://jitpack.io") }
+  maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
-    implementation("com.github.FahimHossain2186:FileX:VERSION")
+  implementation("com.github.FahimHossain2186:FileX:VERSION")
 }
 ```
 
@@ -511,29 +555,29 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args)
-            throws Exception {
+  public static void main(String[] args)
+          throws Exception {
 
-        FileX.create("notes.txt");
+    FileX.create("notes.txt");
 
-        var writer = FileX.write("notes.txt");
+    var writer = FileX.write("notes.txt");
 
-        writer.write(List.of(
-                "Math",
-                "Physics",
-                "Chemistry"
-        ));
+    writer.write(List.of(
+            "Math",
+            "Physics",
+            "Chemistry"
+    ));
 
-        var appender = FileX.append("notes.txt");
+    var appender = FileX.append("notes.txt");
 
-        appender.append("Biology");
+    appender.append("Biology");
 
-        var reader = FileX.read("notes.txt");
+    var reader = FileX.read("notes.txt");
 
-        while (reader.hasNextLine()) {
-            System.out.println(reader.readLine());
-        }
+    while (reader.hasNextLine()) {
+      System.out.println(reader.readLine());
     }
+  }
 }
 ```
 

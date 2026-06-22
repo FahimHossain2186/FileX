@@ -9,11 +9,12 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static java.nio.file.Files.deleteIfExists;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests for FileX's static utility methods: exists, create,
- * createParentDirectories, and delete.
+ * Tests for FileX's static utility methods: exists, size, isEmpty,
+ * create, createParentDirectories, and delete.
  */
 public class FileXUtilityTest {
 
@@ -32,11 +33,13 @@ public class FileXUtilityTest {
         deleteQuietly(path("util_missing.txt"));
         deleteQuietly(path("util_create.txt"));
         deleteQuietly(path("util_delete.txt"));
+        deleteQuietly(path("util_size.txt"));
+        deleteQuietly(path("util_empty.txt"));
         deleteQuietly(path("nested/deeper/file.txt"));
         try {
             // Remove the nested folders if they exist so testCreateWithDirectories can re-create them cleanly
-            Files.deleteIfExists(Paths.get(path("nested/deeper")));
-            Files.deleteIfExists(Paths.get(path("nested")));
+            deleteIfExists(Paths.get(path("nested/deeper")));
+            deleteIfExists(Paths.get(path("nested")));
         } catch (IOException ignored) {
             // Folder wasn't there or couldn't be deleted — fine for test prep
         }
@@ -44,7 +47,7 @@ public class FileXUtilityTest {
 
     private static void deleteQuietly(String path) {
         try {
-            Files.deleteIfExists(Paths.get(path));
+            deleteIfExists(Paths.get(path));
         } catch (IOException ignored) {
             // File wasn't there — perfect for a clean state
         }
@@ -100,10 +103,41 @@ public class FileXUtilityTest {
     @Test
     void testCreateThrowsIfAlreadyExists() throws IOException {
         String path = path("already_exists.txt");
-
+        deleteIfExists(java.nio.file.Paths.get(path));
         FileX.create(path);
 
         assertThrows(FileAlreadyExistsException.class,
                 () -> FileX.create(path));
+    }
+
+    // Test Case 7: size() should report the file's byte count
+    @Test
+    void testSizeReportsByteCount() throws IOException {
+        String path = path("util_size.txt");
+        FileX.write(path).write("Hello");
+
+        long expectedSize = Files.size(Paths.get(path));
+        assertEquals(expectedSize, FileX.size(path));
+        assertTrue(FileX.size(path) > 0);
+    }
+
+    // Test Case 8: size() should throw when the file doesn't exist
+    @Test
+    void testSizeThrowsWhenFileMissing() {
+        String path = path("util_does_not_exist.txt");
+        assertThrows(IOException.class, () -> FileX.size(path));
+    }
+
+    // Test Case 9: isEmpty() should be true for a zero-byte file and false once it has content
+    @Test
+    void testIsEmptyReflectsFileSize() throws IOException {
+        String path = path("util_empty.txt");
+        FileX.create(path);
+
+        assertTrue(FileX.isEmpty(path));
+
+        FileX.write(path).write("Not empty anymore");
+
+        assertFalse(FileX.isEmpty(path));
     }
 }

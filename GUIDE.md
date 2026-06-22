@@ -46,7 +46,7 @@ once:
 ```java
 var reader = FileX.read("diary.txt");
 for (String line : reader.readAllLines()) {
-    System.out.println(line);
+        System.out.println(line);
 }
 ```
 
@@ -78,9 +78,7 @@ If you don't know how many lines a file has, don't guess — ask:
 ```java
 var reader = FileX.read("diary.txt");
 
-while (reader.hasNextLine()) {
-    System.out.println(reader.readLine());
-}
+while (reader.hasNextLine()) {System.out.println(reader.readLine());}
 ```
 
 `hasNextLine()` tells you whether there's anything left before you try
@@ -111,9 +109,7 @@ they're independent ways of reading the same file.
 ```java
 String path = "scores.txt";
 
-if (!FileX.exists(path)) {
-    FileX.create(path);
-}
+if (!FileX.exists(path)) {FileX.create(path);}
 
 var writer = FileX.write(path);
 writer.write("Level 1: 9000 points");
@@ -156,7 +152,41 @@ in a row, just in one call.
 
 ---
 
-## 9. Two Valid Ways to Build a Handle
+## 9. Reading Statistics
+
+Sometimes you don't want the lines themselves — you want to know
+*something about* the file: how many lines it has, what's in it first
+or last, or whether a particular word shows up anywhere.
+
+```java
+var reader = FileX.read("subjects.txt");
+
+System.out.println(reader.lineCount());        // how many lines
+System.out.println(reader.isEmpty());          // true if there are none
+System.out.println(reader.firstLine());        // the first line
+System.out.println(reader.lastLine());         // the last line, or null if empty
+System.out.println(reader.contains("Physics")); // true if any line has "Physics"
+```
+
+None of these move the sequential cursor used by `readLine()` — they
+read from the same cached lines `readAllLines()` uses, so you can mix
+them freely with sequential reading.
+
+> `firstLine()` throws `IndexOutOfBoundsException` if the file has no
+> lines (same as calling `readLine(1)` on an empty file). `lastLine()`
+> is gentler — it just returns `null` instead of throwing.
+
+If you'd rather check a file's size on disk without reading its
+contents at all, the static utilities can tell you that too:
+
+```java
+long bytes = FileX.size("subjects.txt");
+boolean empty = FileX.isEmpty("subjects.txt");
+```
+
+---
+
+## 10. Two Valid Ways to Build a Handle
 
 Everything above used the factory style (`FileX.read(...)`). FileX also
 supports the classic constructor style, if that's more familiar from
@@ -174,7 +204,7 @@ section for the full breakdown, including the charset-aware overloads.
 
 ---
 
-## 10. What's Next
+## 11. What's Next
 
 * Need a quick method lookup instead of a walkthrough? → [CHEATSHEET.md](CHEATSHEET.md)
 * Got an exception you don't understand? → [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
