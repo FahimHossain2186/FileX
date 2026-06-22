@@ -136,11 +136,11 @@ Even before typing it, you can imagine what the code does.
 
 ## Requirements
 
-* **Java 11 or higher.**
-
-FileX uses `var` (local variable type inference, Java 10+) and `String.isBlank()`
-(Java 11+) internally. Make sure your project's JDK is set to 11 or above,
-or you'll hit compile errors that have nothing to do with FileX itself.
+> [!IMPORTANT]
+> **Java 11 or higher is required.**
+> FileX uses `var` (Java 10+) and `String.isBlank()` (Java 11+) internally.
+> If your JDK is set below 11, you'll hit compile errors that have nothing
+> to do with FileX itself — check your project's JDK version first.
 
 ---
 
@@ -150,6 +150,18 @@ or you'll hit compile errors that have nothing to do with FileX itself.
 feels more natural to you. Both produce the exact same object, run through
 the exact same path/charset validation, and behave identically afterward.
 
+**Factory method** — reads like a sentence, matches the rest of the FileX API:
+
+```java
+var reader = FileX.read("notes.txt");
+var reader = FileX.read("notes.txt", StandardCharsets.UTF_8);
+```
+
+```java
+FileX.Read reader = FileX.read("notes.txt");
+FileX.Read reader = FileX.read("notes.txt", StandardCharsets.UTF_8);
+```
+
 **Constructor** — the classic `new ClassName(...)` pattern you already know
 from `Scanner`, `ArrayList`, and `Random`:
 
@@ -157,16 +169,10 @@ from `Scanner`, `ArrayList`, and `Random`:
 var reader = new FileX.Read("notes.txt");
 var reader = new FileX.Read("notes.txt", StandardCharsets.UTF_8);
 ```
+
 ```java
 FileX.Read reader = new FileX.Read("notes.txt");
 FileX.Read reader = new FileX.Read("notes.txt", StandardCharsets.UTF_8);
-```
-
-**Factory method** — reads like a sentence, matches the rest of the FileX API:
-
-```java
-var reader = FileX.read("notes.txt");
-var reader = FileX.read("notes.txt", StandardCharsets.UTF_8);
 ```
 
 The same applies to `FileX.write(...)` / `new FileX.Write(...)` and
@@ -228,38 +234,6 @@ reader.refresh();
 > FileX caches lines in memory after the first read, so repeated calls
 > don't keep hitting the filesystem. If the file changes on disk after
 > you've started reading, call `refresh()` to pick up the new content.
-
-### Count the lines
-
-```java
-reader.lineCount();
-```
-
-### Check if the file has any lines
-
-```java
-reader.isEmpty();
-```
-
-### Get the first line
-
-```java
-reader.firstLine();
-```
-
-### Get the last line
-
-```java
-reader.lastLine();
-```
-
-> Returns `null` if the file has no lines.
-
-### Check if a line contains some text
-
-```java
-reader.contains("Math");
-```
 
 ---
 
@@ -334,18 +308,6 @@ var appender = FileX.append("notes.txt", StandardCharsets.US_ASCII);
 FileX.exists("notes.txt");
 ```
 
-### Check a file's size, in bytes
-
-```java
-FileX.size("notes.txt");
-```
-
-### Check if a file is empty
-
-```java
-FileX.isEmpty("notes.txt");
-```
-
 ### Create a file
 
 ```java
@@ -372,15 +334,9 @@ FileX.delete("notes.txt");
 
 ## Method 1: Download the JAR Manually (Beginner Friendly)
 
-1. Go to GitHub Releases.
-
-2. Download the latest:
-
-```
-FileX-x.x.x.jar
-```
-
-3. Add it to your Java project.
+1. Go to the [latest release](https://github.com/FahimHossain2186/FileX/releases/latest).
+2. Under **Assets**, download `filex-1.0.0.jar` — **not** `filex-1.0.0-sources.jar` or `filex-1.0.0-javadoc.jar`. Those two are extras for browsing the source code and documentation inside your IDE; they aren't what you actually run your program against.
+3. Add it to your Java project using one of the steps below.
 
 ---
 
@@ -389,9 +345,9 @@ FileX-x.x.x.jar
 * File
 * Project Structure
 * Libraries
-* +
+* Click +
 * Java
-* Select `FileX-x.x.x.jar`
+* Select the JAR you downloaded `filex-1.0.0.jar`
 * Apply
 
 Done.
@@ -405,7 +361,7 @@ Done.
 * Configure Build Path
 * Libraries
 * Add External JARs
-* Select FileX JAR
+* Select the JAR you downloaded `filex-1.0.0.jar`
 * Apply and Close
 
 Done.
@@ -414,7 +370,7 @@ Done.
 
 ### VS Code
 
-Place the JAR inside:
+Place the JAR `filex-1.0.0.jar` inside:
 
 ```
 project/lib/
@@ -428,21 +384,14 @@ Done.
 
 ## Method 2: Terminal Installation
 
-If you prefer the terminal, follow the instructions below.
+1. Go to the [latest release](https://github.com/FahimHossain2186/FileX/releases/latest).
+2. Right-click the plain `.jar` asset (not `-sources` or `-javadoc`) and
+   choose **Copy Link** (or **Copy Link Address**) to get its direct
+   download URL.
+3. Paste that link in place of `<JAR_DOWNLOAD_URL>` below.
 
-Replace:
-
-```
-VERSION
-```
-
-with the release version.
-
-Example:
-
-```
-v1.0.0
-```
+This way the commands always work, even after future releases change the
+exact filename.
 
 ---
 
@@ -451,7 +400,7 @@ v1.0.0
 Download:
 
 ```powershell
-curl -L -o FileX.jar https://github.com/FahimHossain2186/FileX/releases/download/VERSION/FileX.jar
+curl -L -o FileX.jar <JAR_DOWNLOAD_URL>
 ```
 
 Compile:
@@ -473,7 +422,7 @@ java -cp ".;FileX.jar" Main
 Download:
 
 ```bash
-curl -L -o FileX.jar https://github.com/FahimHossain2186/FileX/releases/download/VERSION/FileX.jar
+curl -L -o FileX.jar <JAR_DOWNLOAD_URL>
 ```
 
 Compile:
@@ -494,7 +443,10 @@ java -cp ".:FileX.jar" Main
 
 If you're using a build tool, FileX is published via
 [JitPack](https://jitpack.io), so you can add it as a normal dependency
-without downloading anything manually.
+without downloading anything manually. JitPack builds directly from the
+tagged source, so this works regardless of what release assets exist.
+
+The current release is **`v1.0.0`**.
 
 ### Maven
 
@@ -515,7 +467,7 @@ Add the dependency:
 <dependency>
   <groupId>com.github.FahimHossain2186</groupId>
   <artifactId>FileX</artifactId>
-  <version>VERSION</version>
+  <version>v1.0.0</version>
 </dependency>
 ```
 
@@ -527,7 +479,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.github.FahimHossain2186:FileX:VERSION'
+  implementation 'com.github.FahimHossain2186:FileX:v1.0.0'
 }
 ```
 
@@ -539,11 +491,18 @@ repositories {
 }
 
 dependencies {
-  implementation("com.github.FahimHossain2186:FileX:VERSION")
+  implementation("com.github.FahimHossain2186:FileX:v1.0.0")
 }
 ```
 
-Replace `VERSION` with the latest release tag, e.g. `v1.0.0`.
+> For a future release, just swap `v1.0.0` for the new tag name in the
+> snippets above.
+
+---
+
+> [!TIP]
+> **For most beginners, Method 1 is the easiest.**
+> For Maven/Gradle projects, Method 3 is the most convenient and professional option.
 
 ---
 
@@ -625,14 +584,12 @@ This teaches good API design practices from the very beginning.
 
 # Limitations
 
-FileX intentionally avoids advanced functionality.
-
-It is not designed for:
-
-* Gigabyte-sized files
-* High-performance streaming
-* Concurrent file access (`Read` instances are not thread-safe)
-* Enterprise applications
+> [!WARNING]
+> FileX intentionally avoids advanced functionality. It is **not** designed for:
+> - Gigabyte-sized files
+> - High-performance streaming
+> - Concurrent file access (`Read` instances are not thread-safe)
+> - Enterprise applications
 
 If you eventually outgrow FileX, you'll already understand the concepts needed to transition into Java's native file APIs.
 
