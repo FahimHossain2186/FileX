@@ -107,4 +107,18 @@ public class FileXReadTest {
         assertEquals(1, reader.nextLineNumber());
         assertEquals("A", reader.readLine());
     }
+
+    @Test
+    void testIndexedReadDoesNotMoveCursor() throws IOException {
+        String path = path("cursor_independence.txt");
+
+        FileX.write(path).write(List.of("A", "B", "C"));
+
+        FileX.Read reader = FileX.read(path);
+
+        reader.readLine(3);
+
+        assertEquals(1, reader.nextLineNumber());
+        assertEquals("A", reader.readLine());
+    }
 }

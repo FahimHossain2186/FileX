@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Tests for FileX.Write: single-line writes, multi-line writes, and the
+ * Tests for FileX.Write: single-line writes, multi-line writes, and
  * overwrite (truncate) behavior that distinguishes it from Append.
  */
 public class FileXWriteTest {
@@ -68,5 +68,17 @@ public class FileXWriteTest {
         String path = path("write_create.txt");
         FileX.write(path).write("Hello");
         assertTrue(FileX.exists(path));
+    }
+
+    @Test
+    void testWriteEmptyStringCreatesBlankLine() throws IOException {
+        String path = path("write_blank.txt");
+
+        FileX.write(path).write("");
+
+        List<String> lines =
+                FileX.read(path).readAllLines();
+
+        assertEquals(List.of(""), lines);
     }
 }

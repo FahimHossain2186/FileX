@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -94,5 +95,15 @@ public class FileXUtilityTest {
         String path = path("util_does_not_exist.txt");
 
         assertThrows(IOException.class, () -> FileX.delete(path));
+    }
+
+    @Test
+    void testCreateThrowsIfAlreadyExists() throws IOException {
+        String path = path("already_exists.txt");
+
+        FileX.create(path);
+
+        assertThrows(FileAlreadyExistsException.class,
+                () -> FileX.create(path));
     }
 }
